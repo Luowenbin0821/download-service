@@ -77,7 +77,9 @@ async function captureURLToPNG(url) {
     return screenshot;
 }
 
-app.post('/convert/pdf', async (req, res) => {
+const nApiRouter = express.Router();
+
+nApiRouter.post('/convert/pdf', async (req, res) => {
     try {
         const pdf = await convertHTMLToPDF(req.body);
         res.set('Content-Type', 'application/pdf');
@@ -88,7 +90,7 @@ app.post('/convert/pdf', async (req, res) => {
     }
 });
 
-app.post('/convert/png', async (req, res) => {
+nApiRouter.post('/convert/png', async (req, res) => {
     try {
         const png = await convertHTMLToPNG(req.body);
         res.set('Content-Type', 'image/png');
@@ -99,7 +101,7 @@ app.post('/convert/png', async (req, res) => {
     }
 });
 
-app.get('/capture/pdf', async (req, res) => {
+nApiRouter.get('/capture/pdf', async (req, res) => {
     const targetURL = req.query.url;
     if (!targetURL) {
         return res.status(400).send('URL is required as a query parameter');
@@ -115,7 +117,7 @@ app.get('/capture/pdf', async (req, res) => {
     }
 });
 
-app.get('/capture/png', async (req, res) => {
+nApiRouter.get('/capture/png', async (req, res) => {
     const targetURL = req.query.url;
     if (!targetURL) {
         return res.status(400).send('URL is required as a query parameter');
@@ -131,9 +133,11 @@ app.get('/capture/png', async (req, res) => {
     }
 });
 
-app.get('/ping', (req, res) => {
+nApiRouter.get('/ping', (req, res) => {
     res.send('pong');
 });
+
+app.use('/napi', nApiRouter);
 
 
 app.listen(port, () => {
