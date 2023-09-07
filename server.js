@@ -131,6 +131,11 @@ app.get('/capture/png', async (req, res) => {
     }
 });
 
+app.get('/ping', (req, res) => {
+    res.send('pong');
+});
+
+
 app.listen(port, () => {
     console.log(`Server started at http://localhost:${port}`);
 });
