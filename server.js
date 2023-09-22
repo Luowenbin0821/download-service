@@ -1,10 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
+const corsOptions = {
+    origin: 'http://192.168.110.242:8860',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204
+};
 
+app.use(cors(corsOptions));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 app.use(bodyParser.text({ type: 'text/html' }));
 
 const puppeteerLaunchConfig = {
@@ -17,7 +31,7 @@ const puppeteerLaunchConfig = {
     ],
 };
 
-async function convertHTMLToPDF(html) {
+async function convertHTMLToPDF({html}) {
     const browser = await puppeteer.launch(puppeteerLaunchConfig);
     const page = await browser.newPage();
     await page.setContent(html);
@@ -79,7 +93,7 @@ async function captureURLToPNG(url) {
 
 const nApiRouter = express.Router();
 
-nApiRouter.post('/convert/pdf', async (req, res) => {
+nApiRouter.post('/convert/pdf', bodyParser.json(), async (req, res) => {
     try {
         const pdf = await convertHTMLToPDF(req.body);
         res.set('Content-Type', 'application/pdf');
