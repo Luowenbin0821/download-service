@@ -1,24 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
-const cors = require('cors');
 
 const app = express();
 const port = 3000;
-const corsOptions = {
-    origin: 'http://192.168.110.242:8860',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-    optionsSuccessStatus: 204
-};
-
-app.use(cors(corsOptions));
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
 app.use(bodyParser.text({ type: 'text/html' }));
 
 const puppeteerLaunchConfig = {
