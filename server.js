@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const puppeteer = require('puppeteer');
+const cors = require('cors');  // Import the CORS package
 
 const app = express();
 const port = 3000;
 app.use(bodyParser.text({ type: 'text/html' }));
+app.use(cors());  // Use the CORS middleware for all routes
+
 
 const puppeteerLaunchConfig = {
     headless: true,
